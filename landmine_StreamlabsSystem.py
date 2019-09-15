@@ -90,15 +90,17 @@ def Execute(data):
     if data.IsChatMessage():
         if data.IsWhisper():
             if data.GetParam(0).lower() == Command and MySettings.LandMine == "":
-                MySettings.LandMine = data.Message.replace(data.GetParam(0).lower() + " ", "") # Set the landmine's value
+                MySettings.LandMine = data.Message.replace(data.GetParam(0).lower() + " ", "").lower() # Set the landmine's value
 
         else:
             if MySettings.LandMine != "":
-                if(re.search(MySettings.LandMine, data.Message)):
+                if(re.search(MySettings.LandMine.lower(), data.Message)):
                     if data.IsFromTwitch():
                         Parent.SendTwitchMessage("/timeout " + data.UserName + " 1")
+                        Parent.SendTwitchMessage("The phrase was " + MySettings.LandMine + ". Get rekt my dude 02Dab")
                     elif data.IsFromDiscord():
                         Parent.SendDiscordMessage("/timeout " + data.UserName + " 1")
+                        Parent.SendDiscordMessage("The phrase was " + MySettings.LandMine + ". Get rekt my dude 02Dab")
                     MySettings.LandMine = ""
     return
 
