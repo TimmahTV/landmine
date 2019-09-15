@@ -1,24 +1,31 @@
 {
  "output_file": "settings.json",
+  "LandMine":{
+    "type": "textbox",
+    "value": "",
+    "label": "Command",
+    "tooltip": "Landmines the whole chat with one message",
+    "group": "Landmine"
+  },
   "Command": {
     "type": "textbox",
-    "value": "!command",
+    "value": "!landmine",
     "label": "Command",
-    "tooltip": "popup for hovering over",
-    "group": "organized in this group"
+    "tooltip": "Landmines the whole chat with one message",
+    "group": "Landmine"
   },
   "ResponseMessage": {
     "type": "textbox",
-    "value": "the response message sent to chat",
+    "value": "you got Landmined PogChamp",
     "label": "Response",
-    "tooltip": "popup for hovering over",
-    "group": "organized in this group"
+    "tooltip": "Landmines the whole chat with one message",
+    "group": "Landmine"
   },
   "ErrorMessage": {
     "type": "textbox",
-    "value": "Error Message",
+    "value": "oops xd",
     "label": "Error Response",
-    "tooltip": "popup for hovering over",
-    "group": "organized in this group"
+    "tooltip": "Landmines the whole chat with one message",
+    "group": "Landmine"
   }
 }

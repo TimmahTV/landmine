@@ -8,11 +8,11 @@ import re
 #---------------------------------------
 # [Required] Script information
 #---------------------------------------
-ScriptName = "boilerplate" #Change this
+ScriptName = "Land Mine" #Change this
 Website = "https://www.twitch.tv/Timmah_TV"
 Creator = "Timmah_TV"
 Version = "1.0.0"
-Description = "description" #Change this
+Description = "Chat whispers a message to the bot to lay a trap for the next chat member" #Change this
 #---------------------------------------
 # Versions
 #---------------------------------------
@@ -36,9 +36,10 @@ class Settings:
                 self.__dict__ = json.load(f, encoding='utf-8-sig')
 
         else: #set variables if no custom settings file is found
-            self.Command = "command" #Change this
+            self.Command = "!landmine" #Change this
             self.ResponseMessage = "Response Message" #Change this
             self.ErrorMessage = "Error Message" #Change this
+            self.LandMine = ""
 
     # Reload settings on save through UI
     def ReloadSettings(self, data):
@@ -87,9 +88,18 @@ def Init():
 
 def Execute(data):
     if data.IsChatMessage():
-        sendMessage = Parent.SendTwitchMessage if data.IsFromTwitch() else Parent.SendDiscordMessage
-        if data.GetParam(0).lower() == Command: #Change this
-            # Where we process the command
+        if data.IsWhisper():
+            if data.GetParam(0).lower() == Command and MySettings.LandMine == "":
+                MySettings.LandMine = data.Message.replace(data.GetParam(0).lower() + " ", "") # Set the landmine's value
+
+        else:
+            if MySettings.LandMine != "":
+                if(re.search(MySettings.LandMine, data.Message)):
+                    if data.IsFromTwitch():
+                        Parent.SendTwitchMessage("/timeout " + data.UserName + " 1")
+                    elif data.IsFromDiscord():
+                        Parent.SendDiscordMessage("/timeout " + data.UserName + " 1")
+                    MySettings.LandMine = ""
     return
 
 
