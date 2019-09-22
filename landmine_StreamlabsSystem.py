@@ -11,13 +11,14 @@ import re
 ScriptName = "Land Mine" #Change this
 Website = "https://www.twitch.tv/Timmah_TV"
 Creator = "Timmah_TV"
-Version = "1.0.0"
+Version = "1.0.1"
 Description = "Chat whispers a message to the bot to lay a trap for the next chat member" #Change this
 #---------------------------------------
 # Versions
 #---------------------------------------
 """
 1.0.0 - Initial Release
+1.0.1 - Figure out why broke
 """
 #---------------------------------------
 # Variables
@@ -88,19 +89,29 @@ def Init():
 
 def Execute(data):
     if data.IsChatMessage():
+
+        # Check for whisper
         if data.IsWhisper():
+
+            # Check to see if command was stated and the landmine value is blank
             if data.GetParam(0).lower() == Command and MySettings.LandMine == "":
-                MySettings.LandMine = data.Message.replace(data.GetParam(0).lower() + " ", "").lower() # Set the landmine's value
+
+                # set the landmine value to the message minus spaces and the command
+                MySettings.LandMine = data.Message.replace(" ","").replace(Command, "").lower() # Set the landmine's value
 
         else:
+
+            # Check to see if landmine value is not blank
             if MySettings.LandMine != "":
-                if(re.search(MySettings.LandMine.lower(), data.Message)):
-                    if data.IsFromTwitch():
-                        Parent.SendTwitchMessage("/timeout " + data.UserName + " 1")
-                        Parent.SendTwitchMessage("The phrase was " + MySettings.LandMine + ". Get rekt my dude 02Dab")
-                    elif data.IsFromDiscord():
-                        Parent.SendDiscordMessage("/timeout " + data.UserName + " 1")
-                        Parent.SendDiscordMessage("The phrase was " + MySettings.LandMine + ". Get rekt my dude 02Dab")
+
+                # see if regex of the landmine value matches anything in the message said
+                if(re.search(MySettings.LandMine.lower(), data.Message.replace(" ",""))):
+                    # Determine if twitch message or discord message
+                    SendMessage = Parent.SendTwitchMessage if data.IsFromTwitch() else Parent.SendDiscordMessage
+                    SendMessage("/timeout " + data.UserName + " 1")
+                    SendMessage("The phrase was " + MySettings.LandMine + ". Get rekt my dude 02Dab")
+
+                    # Set landmine back to blank
                     MySettings.LandMine = ""
     return
 
