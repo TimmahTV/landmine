@@ -98,6 +98,7 @@ def Execute(data):
 
                 # set the landmine value to the message minus spaces and the command
                 MySettings.LandMine = data.Message.replace(" ","").replace(Command, "").lower() # Set the landmine's value
+                MySettings.LandMineMaker = data.UserName # The one who set the landmine
 
         else:
 
@@ -109,13 +110,29 @@ def Execute(data):
                     # Determine if twitch message or discord message
                     SendMessage = Parent.SendTwitchMessage if data.IsFromTwitch() else Parent.SendDiscordMessage
                     SendMessage("/timeout " + data.UserName + " 1")
-                    SendMessage("The phrase was " + MySettings.LandMine + ". Get rekt my dude 02Dab")
+                    SendMessage(replaceMessageWithInfo(MySettings.LandMine, MySettings.LandMineMaker, data.UserName))
 
                     # Set landmine back to blank
                     MySettings.LandMine = ""
+                    MySettings.LandMineMaker = ""
     return
 
 
 def Tick():
     """Required tick function"""
     return
+
+
+def replaceMessageWithInfo(landmineMessage, landmineMaker, landmineVictim):
+
+    # XXX = landmineMessage, YYY = landmineMaker, ZZZ = landmineVictim
+    phrases = [
+        "The phrase was XXX. ZZZ got got by YYY. 02Dab",
+        "lol. YYY did it to ZZZ with XXX. get rekt my dude 02Dab",
+        "Wow. Can't believe you said XXX in your message ZZZ. Didn't you know that YYY made that the landmine? Loser lmao.",
+        "BRUH! CAN'T BELIEVE YOU SAID XXX IN YOUR MESSAGE ZZZ BRUH. bruh didn't you know? YYY set this up. bruh..."
+    ]
+
+    result = Parent.GetRandom(0,len(phrases))
+
+    return phrases[result].replace('XXX', landmineMessage).replace('YYY', landmineMaker).replace('ZZZ', landmineVictim)

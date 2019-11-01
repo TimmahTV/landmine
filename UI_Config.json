@@ -7,6 +7,13 @@
     "tooltip": "Landmines the whole chat with one message",
     "group": "Landmine"
   },
+  "LandMineMaker":{
+    "type": "textbox",
+    "value": "",
+    "label": "Command",
+    "tooltip": "The one who made the landmine",
+    "group": "Landmine"
+  },
   "Command": {
     "type": "textbox",
     "value": "!landmine",
